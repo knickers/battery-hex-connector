@@ -5,6 +5,13 @@ $fs = 2;
 root3 = sqrt(3);
 hex_d = cell_d + 1;
 
+module tab(tolerance = 0) {
+	// circular?
+	// triangular?
+	// follow contours?
+	// spiral?
+}
+
 module single() {
 	difference() {
 		cylinder(d=hex_d/root3*2, h=height, $fn=6);
