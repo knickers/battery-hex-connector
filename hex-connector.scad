@@ -1,26 +1,19 @@
-cell_d = 18;
-height = 10;
-wall = 1;
-tolerance = 0.1;
+// Space between parts
+tolerance = 0.1; // [0:0.05:0.5]
 
-$fs = 2;
-root3 = sqrt(3);
-hex_d = cell_d + wall;
+// Wall Thickness
+wall = 1;        // [0.5:0.5:5]
 
-module tab(tall, tolerance = 0) {
-	/* circular? * /
-	rotate(-4, [0,0,1])
-		translate([(hex_d/root3*2)/2.15, 0, 0])
-			#cylinder(d = wall+tolerance, h=tall, $fn=10);
-	/**/
+// Cell Diameter
+cell_d = 18;     // [10:1:60]
+cell_r = cell_d / 2;
 
-	/* triangular? * /
-	#polygon()
-	/**/
+// Connector Height
+height = 10;     // [1:1:50]
 
-	/* follow contours? */
-	difference() {
-		cylinder(d=hex_d/root3*2.1, h=tall+2, $fn=6);
+// Resolution
+$fs = 2;         // [1:High, 2:Medium, 4:Low]
+$fa = 0.01 + 0;
 
 		translate([0, 0, -1])
 			cylinder(d=cell_d+1, h=tall+4);
