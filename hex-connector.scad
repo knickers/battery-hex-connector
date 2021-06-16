@@ -73,20 +73,12 @@ module tab(tall, where="inside") {
 	else if (shape == "Contoured") {
 		or = hex_r + T/2;
 		ir = hex_r - T/2;
-		end_a = asin((or-wall) / ir); // a = asin(opp/hyp)
 		start = 30;
-		steps = get_fragments(ir, end_a - start); // 4;
-		angle = (end_a - start) / (steps-1);
+		end = asin((or-wall) / ir); // a = asin(opp/hyp)
 		linear_extrude(tall)
 			polygon([
-				[
-					cos(start)*ir*1.01,
-					sin(start)*ir*1.01
-				],
-				for (i = [0:steps-1]) [
-					cos(start + angle*i)*ir,
-					sin(start + angle*i)*ir
-				],
+				[cos(start)*ir*1.01, sin(start)*ir*1.01],
+				for (a = steps(ir, start, end)) [cos(a)*ir, sin(a)*ir],
 				[or*.65, or-wall]   // Q1
 			]);
 	}
@@ -108,12 +100,27 @@ module single() {
 	}
 }
 
-function get_fragments(radius, angle=360) = ceil(
-	max(
-		min(
-			angle / $fa,
-			radius*2*PI*(angle/360) / $fs
-		),
-		5
-	)
-);
+function steps(radius, start, end) = [
+	start:
+	(end-start) / (get_fragments(radius, abs(end-start))-1):
+	end
+];
+
+function arc(r, sA=0, eA=360, pX=0, pY=0) = [
+	for (a = steps(sA, eA)) [
+		cos(a)*r+pX,
+		sin(a)*r+pY
+	]
+];
+
+function get_fragments(radius, angle=360) = $fn > 0
+	? ( $fn >= 3 ? $fn : 3)
+	: ceil(
+		max(
+			min(
+				angle / $fa,
+				radius*2*PI*(angle/360) / $fs
+			),
+			5
+		)
+	);
