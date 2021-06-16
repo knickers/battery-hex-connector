@@ -77,12 +77,40 @@ module tab(tall, where="inside") {
 		end = asin((or-wall) / ir); // a = asin(opp/hyp)
 		linear_extrude(tall)
 			polygon([
-				[cos(start)*ir*1.01, sin(start)*ir*1.01],
+				[cos(start)*ir*1.01, sin(start)*ir*1.01], // Q4
 				for (a = steps(ir, start, end)) [cos(a)*ir, sin(a)*ir],
 				[or*.65, or-wall]   // Q1
 			]);
 	}
 	else if (shape == "Spiral") {
+		or = hex_r + T/2;
+		ir = hex_r - T/2;
+		start = 30;
+		end = asin((or-wall/1.75) / ir); // a = asin(opp/hyp)
+		linear_extrude(tall)
+			polygon([
+				[cos(start)*ir*1.01, sin(start)*ir*1.01],
+				for (a = steps(ir, start, end)) [cos(a)*ir, sin(a)*ir],
+				[hex_p/5, hex_r],   // Q1
+				[hex_p/4, hex_r]   // Q1
+			]);
+	
+	/*
+		or = wall - T/2;
+		ir = wall + T/2;
+		start = 303;
+		end = 240 + (where == "inside" ? 0 : 5);
+		x = hex_p/4;
+		y = hex_r;
+		linear_extrude(tall)
+			polygon([
+				[x, y],
+				[x+tolerance, y],
+				for (a = steps(ir, start, end)) [cos(a)*ir+x, sin(a)*ir+y]
+			]);
+			*/
+	}
+	else if (shape == "Y") {
 	}
 }
 
